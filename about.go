@@ -25,7 +25,7 @@ func AboutAction() {
 		AssignTo:      &about,
 		Title:         "Sponsor",
 		Icon:          walk.IconInformation(),
-		MinSize:       Size{Width: 300, Height: 200},
+		MinSize:       Size{Width: 200, Height: 200},
 		DefaultButton: &ok,
 		Layout:        VBox{},
 		Children: []Widget{
@@ -33,7 +33,8 @@ func AboutAction() {
 				Layout: HBox{},
 				Children: []Widget{
 					TextLabel{
-						Text: "hello world",
+						MinSize: Size{Width: 180, Height: 180},
+						Text:    "Thank you for using my software. If you are pleased with it, you can donate through the link below. Thank you very much for your support.",
 					},
 				},
 			},

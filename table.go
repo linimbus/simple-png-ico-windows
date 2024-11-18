@@ -92,7 +92,6 @@ const (
 
 var consoleFileTable *FileModel
 var tableView *walk.TableView
-var progressBar *walk.ProgressBar
 
 func init() {
 	consoleFileTable = new(FileModel)
@@ -128,8 +127,6 @@ func FileTableActive() {
 
 		lt.PublishRowsReset()
 		lt.Sort(lt.sortColumn, lt.sortOrder)
-
-		progressBar.SetValue(i / len(lt.items))
 	}
 }
 
@@ -171,14 +168,6 @@ func TableWidget() []Widget {
 				}
 			},
 			Model: consoleFileTable,
-		},
-		ProgressBar{
-			AssignTo: &progressBar,
-			MaxValue: 100,
-			MinValue: 0,
-			MaxSize:  Size{Height: 3},
-			MinSize:  Size{Height: 3},
-			Value:    0,
 		},
 	}
 }
