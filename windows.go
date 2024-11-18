@@ -52,7 +52,7 @@ func mainWindows() {
 		MenuItems: MenuBarInit(),
 		Children: []Widget{
 			Composite{
-				Layout:   Grid{Columns: 2},
+				Layout:   VBox{},
 				Children: ConsoleWidget(),
 			},
 			Composite{

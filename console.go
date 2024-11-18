@@ -9,48 +9,37 @@ import (
 	"github.com/lxn/win"
 )
 
-// func ConsoleRemoteUpdate() {
-// 	remote := ConfigGet().RemoteName
-// 	remoteList := ConfigGet().RemoteList
-
-// 	var remoteOptions []string
-// 	consoleRemoteProxy.SetCurrentIndex(0)
-// 	for i, v := range remoteList {
-// 		if v.Name == remote {
-// 			consoleRemoteProxy.SetCurrentIndex(i)
-// 		}
-// 		remoteOptions = append(remoteOptions, v.Name)
-// 	}
-// 	consoleRemoteProxy.SetModel(remoteOptions)
-// }
-
 func ConsoleWidget() []Widget {
 	var inputDir, outputDir *walk.LineEdit
-
-	var consoleMode *walk.ComboBox
-	var consoleSingle *walk.CheckBox
+	// var consoleMode *walk.ComboBox
+	var checkPNG, checkICON *walk.CheckBox
 
 	return []Widget{
-		Label{
-			Text: "Input Directory: ",
-		},
 		Composite{
 			Layout: HBox{MarginsZero: true},
 			Children: []Widget{
+				Label{
+					Text: "Input Directory: ",
+				},
 				LineEdit{
 					AssignTo: &inputDir,
 					Text:     ConfigGet().InputDir,
 					OnTextChanged: func() {
 						dir := inputDir.Text()
 						if dir == "" {
-							ErrorBoxAction(mainWindow, "input dir is empty")
-							inputDir.SetText("")
+							ErrorBoxAction(mainWindow, "Input directory is empty")
+							inputDir.SetText(ConfigGet().InputDir)
 							return
 						}
-						_, err := os.Stat(dir)
+						stat, err := os.Stat(dir)
 						if err != nil {
-							ErrorBoxAction(mainWindow, "input dir is not exist")
-							inputDir.SetText("")
+							ErrorBoxAction(mainWindow, "Input directory is not exist")
+							inputDir.SetText(ConfigGet().InputDir)
+							return
+						}
+						if !stat.IsDir() {
+							ErrorBoxAction(mainWindow, "Input directory is not directory")
+							inputDir.SetText(ConfigGet().InputDir)
 							return
 						}
 						InputDirSave(dir)
@@ -77,14 +66,26 @@ func ConsoleWidget() []Widget {
 						}
 					},
 				},
+				Composite{
+					Layout: HBox{Margins: Margins{Left: 10, Right: 10}},
+					Children: []Widget{
+						CheckBox{
+							AssignTo: &checkPNG,
+							Checked:  true,
+							Text:     "PNG",
+							OnCheckedChanged: func() {
+							},
+						},
+					},
+				},
 			},
-		},
-		Label{
-			Text: "Output Directory: ",
 		},
 		Composite{
 			Layout: HBox{MarginsZero: true},
 			Children: []Widget{
+				Label{
+					Text: "Output Directory: ",
+				},
 				LineEdit{
 					AssignTo: &outputDir,
 					Text:     ConfigGet().OutputDir,
@@ -92,13 +93,18 @@ func ConsoleWidget() []Widget {
 						dir := outputDir.Text()
 						if dir == "" {
 							ErrorBoxAction(mainWindow, "Output directory is empty")
-							outputDir.SetText("")
+							outputDir.SetText(ConfigGet().OutputDir)
 							return
 						}
-						_, err := os.Stat(dir)
+						stat, err := os.Stat(dir)
 						if err != nil {
 							ErrorBoxAction(mainWindow, "Output directory is not exist")
-							outputDir.SetText("")
+							outputDir.SetText(ConfigGet().OutputDir)
+							return
+						}
+						if !stat.IsDir() {
+							ErrorBoxAction(mainWindow, "Output directory is not directory")
+							inputDir.SetText(ConfigGet().OutputDir)
 							return
 						}
 						OutputDirSave(dir)
@@ -125,26 +131,43 @@ func ConsoleWidget() []Widget {
 						}
 					},
 				},
+				Composite{
+					Layout: HBox{Margins: Margins{Left: 10, Right: 10}},
+					Children: []Widget{
+						CheckBox{
+							AssignTo: &checkICON,
+							Checked:  true,
+							Text:     "ICON",
+							OnCheckedChanged: func() {
+							},
+						},
+					},
+				},
 			},
 		},
-		Label{
-			Text: "Covert Mode: ",
-		},
-		ComboBox{
-			AssignTo:     &consoleMode,
-			CurrentIndex: 0,
-			Model:        []string{"PNG TO ICON"},
-			OnCurrentIndexChanged: func() {
-			},
-		},
-		Label{
-			Text: "Single File: ",
-		},
-		CheckBox{
-			AssignTo: &consoleSingle,
-			Checked:  false,
-			OnCheckedChanged: func() {
-			},
-		},
+		// Composite{
+		// 	Layout: HBox{MarginsZero: true},
+		// 	Children: []Widget{
+		// 		Label{
+		// 			Text: "Covert Mode: ",
+		// 		},
+		// 		ComboBox{
+		// 			AssignTo:     &consoleMode,
+		// 			CurrentIndex: 0,
+		// 			Model:        []string{"PNG TO ICON"},
+		// 			OnCurrentIndexChanged: func() {
+		// 			},
+		// 		},
+		// 		Label{
+		// 			Text: "Single File: ",
+		// 		},
+		// 		CheckBox{
+		// 			AssignTo: &consoleSingle,
+		// 			Checked:  false,
+		// 			OnCheckedChanged: func() {
+		// 			},
+		// 		},
+		// 	},
+		// },
 	}
 }

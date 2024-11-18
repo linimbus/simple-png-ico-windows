@@ -160,7 +160,7 @@ func PNGToICON(fileList []string, fileOut string) error {
 	// remove if output file exist.
 	os.Remove(fileOut)
 
-	output, err := os.Open(fileOut)
+	output, err := os.Create(fileOut)
 	if err != nil {
 		return err
 	}

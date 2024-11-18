@@ -1,9 +1,12 @@
 package main
 
 import (
+	"fmt"
+	"path/filepath"
 	"sort"
 	"sync"
 
+	"github.com/astaxie/beego/logs"
 	"github.com/lxn/walk"
 	. "github.com/lxn/walk/declarative"
 )
@@ -107,11 +110,25 @@ func FileTableActive() {
 		return
 	}
 
+	if ConfigGet().OutputDir == "" {
+		ErrorBoxAction(mainWindow, "Please set output directory!")
+		return
+	}
+
 	for i, item := range lt.items {
-		item.Status = STATUS_DONE
+		item.OutputFile = filepath.Join(ConfigGet().OutputDir, fmt.Sprintf("%d.ico", i))
+
+		err := PNGToICON([]string{item.InputFile}, item.OutputFile)
+		if err != nil {
+			logs.Error("covert png to icon fail, %s", err.Error())
+			item.Status = STATUS_FAIL
+		} else {
+			item.Status = STATUS_DONE
+		}
 
 		lt.PublishRowsReset()
 		lt.Sort(lt.sortColumn, lt.sortOrder)
+
 		progressBar.SetValue(i / len(lt.items))
 	}
 }
