@@ -24,22 +24,20 @@ func ConsoleWidget() []Widget {
 				LineEdit{
 					AssignTo: &inputDir,
 					Text:     ConfigGet().InputDir,
-					OnTextChanged: func() {
+					OnEditingFinished: func() {
 						dir := inputDir.Text()
-						if dir == "" {
-							ErrorBoxAction(mainWindow, "Input directory is empty")
-							inputDir.SetText(ConfigGet().InputDir)
-							return
-						}
-						stat, err := os.Stat(dir)
-						if err != nil {
-							ErrorBoxAction(mainWindow, "Input directory is not exist")
-							inputDir.SetText(ConfigGet().InputDir)
-							return
-						}
-						if !stat.IsDir() {
-							ErrorBoxAction(mainWindow, "Input directory is not directory")
-							inputDir.SetText(ConfigGet().InputDir)
+						if dir != "" {
+							stat, err := os.Stat(dir)
+							if err != nil {
+								ErrorBoxAction(mainWindow, "Input directory is not exist")
+								inputDir.SetText(ConfigGet().InputDir)
+								return
+							}
+							if !stat.IsDir() {
+								ErrorBoxAction(mainWindow, "Input directory is not directory")
+								inputDir.SetText(ConfigGet().InputDir)
+								return
+							}
 							return
 						}
 						InputDirSave(dir)
@@ -89,23 +87,20 @@ func ConsoleWidget() []Widget {
 				LineEdit{
 					AssignTo: &outputDir,
 					Text:     ConfigGet().OutputDir,
-					OnTextChanged: func() {
+					OnEditingFinished: func() {
 						dir := outputDir.Text()
-						if dir == "" {
-							ErrorBoxAction(mainWindow, "Output directory is empty")
-							outputDir.SetText(ConfigGet().OutputDir)
-							return
-						}
-						stat, err := os.Stat(dir)
-						if err != nil {
-							ErrorBoxAction(mainWindow, "Output directory is not exist")
-							outputDir.SetText(ConfigGet().OutputDir)
-							return
-						}
-						if !stat.IsDir() {
-							ErrorBoxAction(mainWindow, "Output directory is not directory")
-							inputDir.SetText(ConfigGet().OutputDir)
-							return
+						if dir != "" {
+							stat, err := os.Stat(dir)
+							if err != nil {
+								ErrorBoxAction(mainWindow, "Output directory is not exist")
+								outputDir.SetText(ConfigGet().OutputDir)
+								return
+							}
+							if !stat.IsDir() {
+								ErrorBoxAction(mainWindow, "Output directory is not directory")
+								inputDir.SetText(ConfigGet().OutputDir)
+								return
+							}
 						}
 						OutputDirSave(dir)
 					},
@@ -145,29 +140,5 @@ func ConsoleWidget() []Widget {
 				},
 			},
 		},
-		// Composite{
-		// 	Layout: HBox{MarginsZero: true},
-		// 	Children: []Widget{
-		// 		Label{
-		// 			Text: "Covert Mode: ",
-		// 		},
-		// 		ComboBox{
-		// 			AssignTo:     &consoleMode,
-		// 			CurrentIndex: 0,
-		// 			Model:        []string{"PNG TO ICON"},
-		// 			OnCurrentIndexChanged: func() {
-		// 			},
-		// 		},
-		// 		Label{
-		// 			Text: "Single File: ",
-		// 		},
-		// 		CheckBox{
-		// 			AssignTo: &consoleSingle,
-		// 			Checked:  false,
-		// 			OnCheckedChanged: func() {
-		// 			},
-		// 		},
-		// 	},
-		// },
 	}
 }

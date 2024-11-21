@@ -30,6 +30,8 @@ func OpenPng(file string) (*PNG, error) {
 		return nil, err
 	}
 
+	defer fd.Close()
+
 	/*
 		25byte PNG header - BigEndian
 		00:	89 50 4e 47 0d 0a 1a 0a // 8byte - magic number
@@ -164,6 +166,8 @@ func PNGToICON(fileList []string, fileOut string) error {
 	if err != nil {
 		return err
 	}
+
+	defer output.Close()
 
 	_, err = output.Write(ICONDirNumber(uint16(len(fileList))))
 	if err != nil {

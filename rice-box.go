@@ -20,7 +20,7 @@ func init() {
 	// define dirs
 	dir1 := &embedded.EmbeddedDir{
 		Filename:   "",
-		DirModTime: time.Unix(1731909569, 0),
+		DirModTime: time.Unix(1732028515, 0),
 		ChildFiles: []*embedded.EmbeddedFile{
 			file2, // "main.ico"
 
@@ -33,7 +33,7 @@ func init() {
 	// register embeddedBox
 	embedded.RegisterEmbeddedBox(`static`, &embedded.EmbeddedBox{
 		Name: `static`,
-		Time: time.Unix(1731909569, 0),
+		Time: time.Unix(1732028515, 0),
 		Dirs: map[string]*embedded.EmbeddedDir{
 			"": dir1,
 		},
