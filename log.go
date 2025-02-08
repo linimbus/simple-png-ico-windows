@@ -28,18 +28,16 @@ var logCfg = logconfig{
 	Color:    false,
 }
 
-func LogInit() error {
+func LogInit() {
 	logCfg.Filename = fmt.Sprintf("%s%c%s", RunlogDirGet(), os.PathSeparator, "runlog.log")
 	value, err := json.Marshal(&logCfg)
 	if err != nil {
-		return err
+		return
 	}
 	err = logs.SetLogger(logs.AdapterFile, string(value))
 	if err != nil {
-		return err
+		return
 	}
-	logs.Async(100)
 	logs.EnableFuncCallDepth(true)
 	logs.SetLogFuncCallDepth(3)
-	return nil
 }

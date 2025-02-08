@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"sort"
 	"sync"
+	"time"
 
 	"github.com/astaxie/beego/logs"
 	"github.com/lxn/walk"
@@ -114,8 +115,15 @@ func FileTableActive() {
 		return
 	}
 
-	for i, item := range lt.items {
-		item.OutputFile = filepath.Join(ConfigGet().OutputDir, fmt.Sprintf("%d.ico", i))
+	for _, item := range lt.items {
+
+		if ConfigGet().TimeStamp {
+			item.OutputFile = filepath.Join(ConfigGet().OutputDir,
+				fmt.Sprintf("%s.ico", time.Now().Format("2006-01-02T15-04-05.000000")))
+		} else {
+			item.OutputFile = filepath.Join(ConfigGet().OutputDir,
+				fmt.Sprintf("%s.ico", FileName(item.InputFile)))
+		}
 
 		err := PNGToICON([]string{item.InputFile}, item.OutputFile)
 		if err != nil {

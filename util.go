@@ -11,7 +11,7 @@ import (
 )
 
 func VersionGet() string {
-	return "v0.1.1"
+	return "v0.2.0"
 }
 
 func SaveToFile(name string, body []byte) error {
@@ -20,7 +20,7 @@ func SaveToFile(name string, body []byte) error {
 
 func CapSignal(proc func()) {
 	signalChan := make(chan os.Signal, 1)
-	signal.Notify(signalChan, syscall.SIGKILL, syscall.SIGINT, syscall.SIGTERM)
+	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM)
 
 	go func() {
 		sig := <-signalChan
@@ -34,7 +34,7 @@ func StringList(list []string) string {
 	var body string
 	for idx, v := range list {
 		if idx == len(list)-1 {
-			body += fmt.Sprintf("%s", v)
+			body += v
 		} else {
 			body += fmt.Sprintf("%s;", v)
 		}
@@ -100,4 +100,10 @@ func ReadFileList(dir string) ([]string, error) {
 	}
 
 	return output, nil
+}
+
+func FileName(filePath string) string {
+	fileName := filepath.Base(filePath)
+	ext := filepath.Ext(fileName)
+	return fileName[:len(fileName)-len(ext)]
 }

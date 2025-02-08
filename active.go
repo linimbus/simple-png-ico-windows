@@ -5,7 +5,7 @@ import (
 	. "github.com/lxn/walk/declarative"
 )
 
-var scan, clear, covert, cancel *walk.PushButton
+var scan, cancel *walk.PushButton
 
 func ScanFileList() {
 	fileList, err := ReadFileList(ConfigGet().InputDir)
@@ -25,16 +25,9 @@ func ScanFileList() {
 	}
 	FileTableInit(fileItem)
 
-	scan.SetEnabled(true)
-	covert.SetEnabled(true)
-	cancel.SetEnabled(true)
-}
-
-func CovertFileList() {
 	FileTableActive()
 
 	scan.SetEnabled(true)
-	covert.SetEnabled(true)
 	cancel.SetEnabled(true)
 }
 
@@ -42,32 +35,12 @@ func ActiveWidget() []Widget {
 	return []Widget{
 		PushButton{
 			AssignTo: &scan,
-			Text:     "Scan",
+			Text:     "Scan Covert",
 			OnClicked: func() {
-
 				scan.SetEnabled(false)
-				covert.SetEnabled(false)
 				cancel.SetEnabled(false)
 
 				go ScanFileList()
-			},
-		},
-		PushButton{
-			AssignTo: &clear,
-			Text:     "Clear",
-			OnClicked: func() {
-				FileTableInit(make([]*FileItem, 0))
-			},
-		},
-		PushButton{
-			AssignTo: &covert,
-			Text:     "Covert",
-			OnClicked: func() {
-				scan.SetEnabled(false)
-				covert.SetEnabled(false)
-				cancel.SetEnabled(false)
-
-				go CovertFileList()
 			},
 		},
 		PushButton{

@@ -14,6 +14,7 @@ type Config struct {
 	OutputDir string `json:"outputDir"`
 	Mode      string `json:"mode"`
 	Pixel     int    `json:"pixel"`
+	TimeStamp bool   `json:"timestamp"`
 }
 
 var configCache = Config{
@@ -52,6 +53,11 @@ func OutputDirSave(path string) error {
 	return configSyncToFile()
 }
 
+func TimeStampSave(flag bool) error {
+	configCache.TimeStamp = flag
+	return configSyncToFile()
+}
+
 func ModeSave(mode string) error {
 	configCache.Mode = mode
 	return configSyncToFile()
@@ -62,7 +68,7 @@ func PixelSave(pixel int) error {
 	return configSyncToFile()
 }
 
-func ConfigInit() error {
+func ConfigInit() {
 	configFilePath = fmt.Sprintf("%s%c%s", ConfigDirGet(), os.PathSeparator, "config.json")
 
 	_, err := os.Stat(configFilePath)
@@ -70,21 +76,21 @@ func ConfigInit() error {
 		err = configSyncToFile()
 		if err != nil {
 			logs.Error("config sync to file fail, %s", err.Error())
-			return err
+			return
 		}
 	}
 
 	value, err := os.ReadFile(configFilePath)
 	if err != nil {
 		logs.Error("read config file from app data dir fail, %s", err.Error())
-		return err
+		configSyncToFile()
+		return
 	}
 
 	err = json.Unmarshal(value, &configCache)
 	if err != nil {
 		logs.Error("json unmarshal config fail, %s", err.Error())
-		return err
+		configSyncToFile()
+		return
 	}
-
-	return nil
 }

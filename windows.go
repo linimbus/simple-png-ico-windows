@@ -11,6 +11,21 @@ var mainWindow *walk.MainWindow
 var mainWindowWidth = 700
 var mainWindowHeight = 400
 
+func OptionWidget() []Widget {
+	var checkBox *walk.CheckBox
+
+	return []Widget{
+		CheckBox{
+			AssignTo: &checkBox,
+			Text:     "Timestamp",
+			Checked:  ConfigGet().TimeStamp,
+			OnCheckedChanged: func() {
+				TimeStampSave(checkBox.Checked())
+			},
+		},
+	}
+}
+
 func MenuBarInit() []MenuItem {
 	return []MenuItem{
 		Menu{
@@ -48,19 +63,23 @@ func mainWindows() {
 		AssignTo:  &mainWindow,
 		MinSize:   Size{Width: mainWindowWidth, Height: mainWindowHeight},
 		Size:      Size{Width: mainWindowWidth, Height: mainWindowHeight},
-		Layout:    VBox{Margins: Margins{Top: 5, Bottom: 5, Left: 5, Right: 5}},
+		Layout:    VBox{Margins: Margins{Top: 10, Bottom: 10, Left: 10, Right: 10}},
 		MenuItems: MenuBarInit(),
 		Children: []Widget{
 			Composite{
-				Layout:   VBox{},
+				Layout:   VBox{MarginsZero: true},
 				Children: ConsoleWidget(),
 			},
 			Composite{
-				Layout:   VBox{},
+				Layout:   HBox{MarginsZero: true},
+				Children: OptionWidget(),
+			},
+			Composite{
+				Layout:   VBox{MarginsZero: true},
 				Children: TableWidget(),
 			},
 			Composite{
-				Layout:   HBox{},
+				Layout:   HBox{MarginsZero: true},
 				Children: ActiveWidget(),
 			},
 		},
